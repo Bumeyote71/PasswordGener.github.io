@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <meta charset="UTF-8">
+    <title>PasswordGener</title>
+</head>
+<body>
+    <div class="top-menu">
+        <button class="menu-button">Inicio</button>
+        <button class="menu-button">Ajustes</button>
+        <button class="menu-button">Contraseñas Guardadas</button>
+    </div>
+    <div class="container">
+        <div class="light-border"></div>
+        <h1>PasswordGener</h1>
+        <label for="longitud">Longitud de la contraseña (entre 6 y 20 caracteres):</label>
+        <input type="number" id="longitud" min="6" max="20" required>
+        <button onclick="generarContrasena()">Generar Contraseña</button>
+        <p id="contrasenaGenerada"></p>
+    </div>
+
+    <canvas id="particles"></canvas>
+    <script>
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+
+        let particlesArray;
+
+        // Tamaño del canvas
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Crear partículas
+        function Particle(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 15 + 1; // Modifica el rango para hacer las partículas más grandes
+            this.speedX = Math.random() * 3 - 1.5;
+            this.speedY = Math.random() * 3 - 1.5;
+        }
+
+        // Actualizar posición de las partículas
+        Particle.prototype.update = function () {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.size > 0.2) this.size -= 0.1;
+        };
+
+        // Dibujar las partículas en el canvas
+        Particle.prototype.draw = function () {
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        };
+
+        // Crear un array de partículas
+        function createParticles() {
+            particlesArray = [];
+            for (let i = 0; i < 100; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                particlesArray.push(new Particle(x, y));
+            }
+        }
+
+        // Animación
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particlesArray.forEach((particle) => {
+                particle.update();
+                particle.draw();
+            });
+        }
+
+        createParticles();
+        animate();
+
+        // Redimensionar el canvas al cambiar el tamaño de la ventana
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            createParticles();
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #2c2c2c;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        .top-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #444;
+            padding: 10px 0;
+            border-bottom: 2px solid #666;
+            display: flex;
+            justify-content: center;
+        }
+
+        .menu-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .menu-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #920e0e;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .menu-button:hover {
+            background-color: #ce0e0e;
+            transform: scale(1.05);
+        }
+
+        .menu-button:not(:last-child) {
+            margin-right: 10px;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            border-radius: 8px;
+            background-color: #777474;
+            box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            margin-top: 50px; /* Ajuste para dejar espacio para el menú */
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+            box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        input[type="number"] {
+            padding: 8px;
+            margin-bottom: 15px;
+            width: 100px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #ff0000;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #920e0e;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #ce0e0e;
+            transform: scale(1.05);
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+        }
+
+        #particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .light-border {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            z-index: 0;
+            animation: lightBorderAnimation 3s infinite linear;
+        }
+
+        @keyframes lightBorderAnimation {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.02);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</body>
+</html>
